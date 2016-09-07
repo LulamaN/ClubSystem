@@ -33,7 +33,7 @@
         End If
 
         myLogic.saveRaceResultsData(myResultsList, cmbAthlete.Text, cmbEvent.Text, txtResult.Text)
-        myLogic.saveRaceResultsToFile(myResultsList)
+        ''myLogic.saveRaceResultsToFile(myResultsList)
         myLogic.loadResults(cmbAthlete.Text, myResultsList, lbResults)
     End Sub
 End Class

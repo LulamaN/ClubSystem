@@ -1,63 +1,92 @@
 ﻿Friend NotInheritable Class myLogic
 
     Public Shared Sub loadEvents(ByRef myEventsList As ArrayList, ByRef lb As ListBox)
-        Dim myFileContents As New ArrayList()
+        ''Dim myFileContents As New ArrayList()
         myEventsList.Clear()
-        myFileContents = fileIO.readFile("Events.txt")
 
-        For i As Integer = 0 To myFileContents.Count - 1
+        Dim myDT As New DataTable
 
-            Dim result As String()
+        myDT = fileIO.selectDBData("SELECT * FROM Events")
+
+        'Fill the listbox
+        lb.Items.Clear()
+
+        Dim row As DataRow
+
+        For Each row In myDT.Rows
+            lb.Items.Add(row.Item(0).ToString())
             Dim myRace As New myEvent
 
-            result = myFileContents.Item(i)
+            ''result = myFileContents.Item(i)
 
-            myRace.Distance = result(0)
-            myRace.EventDate = result(1)
-            myRace.Location = result(2)
-            myRace.RegFee = result(3)
-            myRace.Title = result(4)
+            myRace.Distance = row.Item(4)
+            myRace.EventDate = row.Item(1)
+            myRace.Location = row.Item(3)
+            myRace.RegFee = row.Item(2)
+            myRace.Title = row.Item(0)
             myEventsList.Add(myRace)
 
         Next
 
-        ''Add events to listbox
-        For Each record As myEvent In myEventsList
-            lb.Items.Add(record.Title)
-        Next
+
+
+        'myFileContents = fileIO.readFile("Events.txt")
+
+        'For i As Integer = 0 To myFileContents.Count - 1
+
+        '    Dim result As String()
+        '    Dim myRace As New myEvent
+
+        '    result = myFileContents.Item(i)
+
+        '    myRace.Distance = result(0)
+        '    myRace.EventDate = result(1)
+        '    myRace.Location = result(2)
+        '    myRace.RegFee = result(3)
+        '    myRace.Title = result(4)
+        '    myEventsList.Add(myRace)
+
+        'Next
+
+        ' ''Add events to listbox
+        'For Each record As myEvent In myEventsList
+        '    lb.Items.Add(record.Title)
+        'Next
 
     End Sub
 
     Public Shared Sub loadEvents(ByRef myEventsList As ArrayList, ByRef cmb As ComboBox)
-        Dim myFileContents As New ArrayList()
+        ''Dim myFileContents As New ArrayList()
         myEventsList.Clear()
-        myFileContents = fileIO.readFile("Events.txt")
 
-        For i As Integer = 0 To myFileContents.Count - 1
+        Dim myDT As New DataTable
 
-            Dim result As String()
+        myDT = fileIO.selectDBData("SELECT * FROM Events")
+
+        'Fill the listbox
+        cmb.Items.Clear()
+
+        Dim row As DataRow
+
+        For Each row In myDT.Rows
+            cmb.Items.Add(row.Item(0).ToString())
             Dim myRace As New myEvent
 
-            result = myFileContents.Item(i)
+            ''result = myFileContents.Item(i)
 
-            myRace.Distance = result(0)
-            myRace.EventDate = result(1)
-            myRace.Location = result(2)
-            myRace.RegFee = result(3)
-            myRace.Title = result(4)
+            myRace.Distance = row.Item(4)
+            myRace.EventDate = row.Item(1)
+            myRace.Location = row.Item(3)
+            myRace.RegFee = row.Item(2)
+            myRace.Title = row.Item(0)
             myEventsList.Add(myRace)
 
         Next
-
-        ''Add events to listbox
-        For Each record As myEvent In myEventsList
-            cmb.Items.Add(record.Title)
-        Next
-
     End Sub
 
     Public Shared Sub saveEventData(ByRef myEventsList As ArrayList, ByVal isUpdateName As Boolean, ByVal oldEventName As String, ByVal eventName As String, eventDate As Date, regFee As Double, ByVal location As String, ByVal distance As Double)
         Dim isUpdate As Boolean = False
+        Dim mySql As String
 
         If isUpdateName Then
             For Each EventItem As myEvent In myEventsList
@@ -71,6 +100,16 @@
                     isUpdate = True
                 End If
             Next
+
+            mySql = "UPDATE Events " & _
+                   "SET event_title = '" & eventName & "'" & _
+                      ",event_date = '" & eventDate.ToShortDateString() & "'" & _
+                      ",registration_fee = '" & regFee & "'" & _
+                      ",event_location = '" & location & "'" & _
+                      ",distance = '" & distance & "'" & _
+                 " WHERE event_title = '" & oldEventName & "'"
+
+            fileIO.modifyDBData(mySql)
 
         End If
 
@@ -86,6 +125,20 @@
                 End If
             Next
 
+            mySql = "UPDATE Events " & _
+          "SET " & _
+               "event_date = '" & eventDate.ToShortDateString() & "'" & _
+               ",registration_fee = '" & regFee & "'" & _
+               ",event_location = '" & location & "'" & _
+               ",distance = '" & distance & "'" & _
+          " WHERE event_title = '" & eventName & "'"
+
+            fileIO.modifyDBData(mySql)
+
+            'MessageBox.Show(mySql)
+
+            'fileIO.writeLine("testsql.txt", mySql, False)
+
         End If
 
 
@@ -98,6 +151,12 @@
             newEvent.Distance = distance
 
             myEventsList.Add(newEvent)
+
+            mySql = "INSERT INTO Events (event_title, event_date,registration_fee,event_location,distance) " & _
+                    "VALUES ('" & eventName & "','" & eventDate.ToShortDateString() & "','" & regFee & "','" & location & "','" & distance & "')"
+
+            fileIO.modifyDBData(mySql)
+
         End If
 
 
@@ -144,7 +203,10 @@
             End If
         Next
 
-        saveEventsToFile(eventsList)
+        'Write modified bubble to the file
+        'saveEventsToFile(eventsList)
+
+        fileIO.modifyDBData("DELETE FROM Events WHERE event_title = '" & eventName & "'")
 
     End Sub
 
@@ -152,23 +214,31 @@
     'Ath
 
     Public Shared Sub loadAthlete(ByRef myAthleteList As ArrayList, ByRef lb As ListBox)
-        Dim myFileContents As New ArrayList()
+        ' Dim myFileContents As New ArrayList()
         myAthleteList.Clear()
-        myFileContents = fileIO.readFile("Athlete.txt")
 
-        For i As Integer = 0 To myFileContents.Count - 1
+        'myFileContents = fileIO.readFile("Athlete.txt")
 
-            Dim result As String()
+        Dim myDT As New DataTable
+
+        myDT = fileIO.selectDBData("SELECT * FROM Athlete")
+
+
+        Dim row As DataRow
+
+        For Each row In myDT.Rows
+
+            ''Dim result As String()
             Dim myAthlete As New myAthletes
 
-            result = myFileContents.Item(i)
+            ''result = myFileContents.Item(i)
 
-            myAthlete.MemNum = result(0)
-            myAthlete.NameSurname = result(1)
-            myAthlete.BirthDate = result(2)
-            myAthlete.Gender = result(3)
-            myAthlete.DateJoined = result(4)
-            myAthlete.MembFeeOut = result(5)
+            myAthlete.MemNum = row.Item(0)
+            myAthlete.NameSurname = row.Item(1)
+            myAthlete.BirthDate = row.Item(2)
+            myAthlete.Gender = row.Item(3)
+            myAthlete.DateJoined = row.Item(4)
+            myAthlete.MembFeeOut = row.Item(5)
 
             myAthleteList.Add(myAthlete)
 
@@ -178,27 +248,34 @@
         For Each record As myAthletes In myAthleteList
             lb.Items.Add(record.MemNum)
         Next
-
     End Sub
 
     Public Shared Sub loadAthlete(ByRef myAthleteList As ArrayList, ByRef cmb As ComboBox)
-        Dim myFileContents As New ArrayList()
+        'Dim myFileContents As New ArrayList()
         myAthleteList.Clear()
-        myFileContents = fileIO.readFile("Athlete.txt")
 
-        For i As Integer = 0 To myFileContents.Count - 1
+        'myFileContents = fileIO.readFile("Athlete.txt")
 
-            Dim result As String()
+        Dim myDT As New DataTable
+
+        myDT = fileIO.selectDBData("SELECT * FROM Athlete")
+
+
+        Dim row As DataRow
+
+        For Each row In myDT.Rows
+
+            ''Dim result As String()
             Dim myAthlete As New myAthletes
 
-            result = myFileContents.Item(i)
+            ''result = myFileContents.Item(i)
 
-            myAthlete.MemNum = result(0)
-            myAthlete.NameSurname = result(1)
-            myAthlete.BirthDate = result(2)
-            myAthlete.Gender = result(3)
-            myAthlete.DateJoined = result(4)
-            myAthlete.MembFeeOut = result(5)
+            myAthlete.MemNum = row.Item(0)
+            myAthlete.NameSurname = row.Item(1)
+            myAthlete.BirthDate = row.Item(2)
+            myAthlete.Gender = row.Item(3)
+            myAthlete.DateJoined = row.Item(4)
+            myAthlete.MembFeeOut = row.Item(5)
 
             myAthleteList.Add(myAthlete)
 
@@ -272,6 +349,7 @@
 
     Public Shared Sub saveAthleteData(ByVal isUpdate As Boolean, ByRef myAthleteList As ArrayList, ByVal MembNo As Double, ByRef NameSur As String, ByRef BirthDate As Date, ByRef Gender As String, ByRef DateJoined As Date, ByRef MemFeeOut As Double)
         '' Dim isUpdate As Boolean = False
+        Dim mySql
 
         If isUpdate Then
             For Each AthItem As myAthletes In myAthleteList
@@ -283,8 +361,18 @@
                     AthItem.MembFeeOut = MemFeeOut
                 End If
 
-
+     
             Next
+
+            mySql = "UPDATE Athlete " & _
+                 " SET name_surname = '" & NameSur & "'" & _
+                 ",birth_date = '" & BirthDate.ToShortDateString() & "'" & _
+                 ",gender = '" & Gender & "'" & _
+                 ",date_joined = '" & DateJoined.ToShortDateString() & "'" & _
+                 ",fee_outstanding = '" & MemFeeOut & "'" & _
+                 " WHERE membership_number = '" & MembNo & "'"
+            fileIO.modifyDBData(mySql)
+
         Else
             Dim AthItem As New myAthletes
             AthItem.MemNum = MembNo
@@ -295,6 +383,10 @@
             AthItem.MembFeeOut = MemFeeOut
 
             myAthleteList.Add(AthItem)
+
+            mySql = "INSERT INTO Athlete (membership_number,name_surname,birth_date,gender,date_joined,fee_outstanding)" & _
+             " VALUES ('" & MembNo & "','" & NameSur & "','" & BirthDate.ToShortDateString() & "','" & Gender & "','" & DateJoined.ToShortDateString() & "','" & MemFeeOut & "')"
+            fileIO.modifyDBData(mySql)
         End If
 
 
@@ -367,44 +459,51 @@
     End Sub
 
     Public Shared Sub loadResults(ByVal membNo As Double, ByRef myResultsList As ArrayList, ByRef lb As ListBox)
-        Dim myFileContents As New ArrayList()
+        Try
+
+    
         myResultsList.Clear()
         lb.Items.Clear()
-        myFileContents = fileIO.readFile("RaceResults.txt")
+
         Dim myRes As myPerfResults = Nothing
+        Dim myDT As New DataTable
+        Dim mySql
 
-        For i As Integer = 0 To myFileContents.Count - 1
+        mySql = "SELECT membership_number,event,result FROM raceresults;"
 
-            Dim result As String()
+        myDT = fileIO.selectDBData(mySql)
+
+
+        Dim row As DataRow
+
+        For Each row In myDT.Rows
+
             myRes = New myPerfResults
 
-            result = myFileContents.Item(i)
-
-            myRes.MembershipNo = result(0)
-            myRes.eventID = result(1)
-            myRes.FinishTime = result(2)
-
+            myRes.MembershipNo = row.Item(0)
+            myRes.eventID = row.Item(1)
+            myRes.FinishTime = row.Item(2)
 
             myResultsList.Add(myRes)
 
-
-
-        Next
-
-        ''Add Athlete to listbox
-        For Each record As myPerfResults In myResultsList
-            If membNo = record.MembershipNo Then
-                lb.Items.Add(record.MembershipNo & "," & record.eventID & "," & record.FinishTime)
+            If membNo = row.Item(0) Then
+                lb.Items.Add(myRes.MembershipNo & "," & myRes.eventID & "," & myRes.FinishTime)
             End If
 
         Next
+
+        Catch ex As Exception
+            MessageBox.Show("No data found! (" & ex.Message.ToString() & ")")
+        End Try
+
+
 
     End Sub
 
 
     Public Shared Sub saveRaceResultsData(ByRef myRaceResultsList As ArrayList, membNo As Double, ByVal eventID As String, ByVal result As String)
 
-
+        Dim mySql
         Dim newRaceResult As New myPerfResults
         newRaceResult.MembershipNo = membNo
         newRaceResult.eventID = eventID
@@ -412,6 +511,12 @@
         
 
         myRaceResultsList.Add(newRaceResult)
+
+
+        mySql = "INSERT INTO RaceResults (membership_number,event,result) " & _
+                "VALUES ('" & membNo & "','" & eventID & "','" & result & "')"
+
+        fileIO.modifyDBData(mySql)
 
     End Sub
 
@@ -718,7 +823,7 @@
 
     Public Shared Sub updateEvents(ByRef myFrmEvents As frmEvent, ByVal isUpdateName As Boolean, ByVal oldEventName As String)
         myLogic.saveEventData(myFrmEvents.myEventsList, isUpdateName, oldEventName, myFrmEvents.txtEventTitle.Text, myFrmEvents.dtPicker.Value, myFrmEvents.txtRegFee.Text, myFrmEvents.txtLocation.Text, myFrmEvents.txtDistance.Text)
-        myLogic.saveEventsToFile(myFrmEvents.myEventsList)
+        'myLogic.saveEventsToFile(myFrmEvents.myEventsList)
         myLogic.loadEvents(myFrmEvents)
     End Sub
 

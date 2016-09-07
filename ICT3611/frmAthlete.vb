@@ -9,7 +9,7 @@
     Private Sub frmAthlete_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
         e.Cancel = True
         Me.Hide()
-        MessageBox.Show("Enter membership number or select from the list")
+
         Return
     End Sub
 
@@ -38,7 +38,7 @@
         End If
 
         myLogic.saveAthleteData(isUpdate, myAthletesList, CType(txtMemNo.Text, Double), txtNameSurname.Text, dtPickerBirthDate.Value, myLogic.getGender(Me), dtPickerDateJoined.Value, CType(txtMembFeeOut.Text, Double))
-        myLogic.saveAthleteToFile(myAthletesList)
+        'myLogic.saveAthleteToFile(myAthletesList)
 
         myLogic.loadAthletes(Me)
         myLogic.setSelectedAthlete(Me)
