@@ -6,6 +6,8 @@
 
         Dim myDT As New DataTable
 
+
+
         myDT = fileIO.selectDBData("SELECT * FROM Events")
 
         'Fill the listbox
