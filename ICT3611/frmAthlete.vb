@@ -18,6 +18,8 @@
     End Sub
 
     Private Sub lbAthletes_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lbAthletes.SelectedIndexChanged
+        setFormControls(True)
+
         myLogic.selectAthlete(Me)
         btnUpdate.Enabled = True
 
@@ -55,6 +57,9 @@
     End Sub
 
     Private Sub btnNew_Click(sender As Object, e As EventArgs) Handles btnNew.Click
+
+        setFormControls(True)
+
         isUpdate = False
 
         txtMemNo.Visible = False
@@ -65,7 +70,54 @@
         btnNew.Visible = False
         btnUpdate.Enabled = True
         btnUpdate.Text = "Save"
+    End Sub
 
+    Public Sub setFormControls(ByVal enabled As Boolean)
 
+        If enabled Then
+            txtNameSurname.Enabled = True
+            dtPickerBirthDate.Enabled = True
+            rdFemale.Enabled = True
+            rdMale.Enabled = True
+            dtPickerDateJoined.Enabled = True
+            txtMembFeeOut.Enabled = True
+
+        Else
+            txtNameSurname.Enabled = False
+            dtPickerBirthDate.Enabled = False
+            rdFemale.Enabled = False
+            rdMale.Enabled = False
+            dtPickerDateJoined.Enabled = False
+            txtMembFeeOut.Enabled = False
+        End If
+
+    End Sub
+
+    Private Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
+        If myLogic.getAthleteRecordsCount(txtMemNo.Text) = 0 Then
+            'delete the athlete
+            myLogic.deleteAthlete(txtMemNo.Text)
+            myLogic.loadAthletes(Me)
+
+            txtNameSurname.Text = ""
+            txtMembFeeOut.Text = ""
+            setFormControls(False)
+            btnUpdate.Enabled = False
+
+        Else
+            'you can't delete
+
+            Try
+
+                Throw New System.Exception("Athlete has results captured, you cannot delete this record!")
+            
+
+            Catch ex As Exception
+                MessageBox.Show(ex.Message)
+            End Try
+
+      
+
+        End If
     End Sub
 End Class

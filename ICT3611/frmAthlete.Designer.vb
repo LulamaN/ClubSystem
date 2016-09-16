@@ -43,6 +43,7 @@ Partial Class frmAthlete
         Me.lbAthletes = New System.Windows.Forms.ListBox()
         Me.btnSearch = New System.Windows.Forms.Button()
         Me.txtMemNo = New System.Windows.Forms.TextBox()
+        Me.btnDelete = New System.Windows.Forms.Button()
         Me.GroupBox1.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
         Me.SuspendLayout()
@@ -94,6 +95,7 @@ Partial Class frmAthlete
         'rdFemale
         '
         Me.rdFemale.AutoSize = True
+        Me.rdFemale.Enabled = False
         Me.rdFemale.Location = New System.Drawing.Point(214, 117)
         Me.rdFemale.Name = "rdFemale"
         Me.rdFemale.Size = New System.Drawing.Size(59, 17)
@@ -105,6 +107,7 @@ Partial Class frmAthlete
         'rdMale
         '
         Me.rdMale.AutoSize = True
+        Me.rdMale.Enabled = False
         Me.rdMale.Location = New System.Drawing.Point(132, 117)
         Me.rdMale.Name = "rdMale"
         Me.rdMale.Size = New System.Drawing.Size(48, 17)
@@ -115,6 +118,7 @@ Partial Class frmAthlete
         '
         'txtMembFeeOut
         '
+        Me.txtMembFeeOut.Enabled = False
         Me.txtMembFeeOut.Location = New System.Drawing.Point(132, 202)
         Me.txtMembFeeOut.Name = "txtMembFeeOut"
         Me.txtMembFeeOut.Size = New System.Drawing.Size(157, 20)
@@ -122,6 +126,7 @@ Partial Class frmAthlete
         '
         'dtPickerDateJoined
         '
+        Me.dtPickerDateJoined.Enabled = False
         Me.dtPickerDateJoined.Location = New System.Drawing.Point(132, 155)
         Me.dtPickerDateJoined.Name = "dtPickerDateJoined"
         Me.dtPickerDateJoined.Size = New System.Drawing.Size(157, 20)
@@ -129,6 +134,7 @@ Partial Class frmAthlete
         '
         'dtPickerBirthDate
         '
+        Me.dtPickerBirthDate.Enabled = False
         Me.dtPickerBirthDate.Location = New System.Drawing.Point(132, 63)
         Me.dtPickerBirthDate.Name = "dtPickerBirthDate"
         Me.dtPickerBirthDate.Size = New System.Drawing.Size(157, 20)
@@ -136,6 +142,7 @@ Partial Class frmAthlete
         '
         'txtNameSurname
         '
+        Me.txtNameSurname.Enabled = False
         Me.txtNameSurname.Location = New System.Drawing.Point(132, 25)
         Me.txtNameSurname.Name = "txtNameSurname"
         Me.txtNameSurname.Size = New System.Drawing.Size(157, 20)
@@ -214,6 +221,7 @@ Partial Class frmAthlete
         '
         'GroupBox2
         '
+        Me.GroupBox2.Controls.Add(Me.btnDelete)
         Me.GroupBox2.Controls.Add(Me.lbAthletes)
         Me.GroupBox2.Controls.Add(Me.btnSearch)
         Me.GroupBox2.Controls.Add(Me.txtMemNo)
@@ -229,7 +237,7 @@ Partial Class frmAthlete
         Me.lbAthletes.FormattingEnabled = True
         Me.lbAthletes.Location = New System.Drawing.Point(15, 45)
         Me.lbAthletes.Name = "lbAthletes"
-        Me.lbAthletes.Size = New System.Drawing.Size(174, 238)
+        Me.lbAthletes.Size = New System.Drawing.Size(174, 212)
         Me.lbAthletes.TabIndex = 21
         '
         'btnSearch
@@ -247,6 +255,15 @@ Partial Class frmAthlete
         Me.txtMemNo.Name = "txtMemNo"
         Me.txtMemNo.Size = New System.Drawing.Size(112, 20)
         Me.txtMemNo.TabIndex = 19
+        '
+        'btnDelete
+        '
+        Me.btnDelete.Location = New System.Drawing.Point(15, 264)
+        Me.btnDelete.Name = "btnDelete"
+        Me.btnDelete.Size = New System.Drawing.Size(174, 23)
+        Me.btnDelete.TabIndex = 22
+        Me.btnDelete.Text = "Delete"
+        Me.btnDelete.UseVisualStyleBackColor = True
         '
         'frmAthlete
         '
@@ -285,4 +302,5 @@ Partial Class frmAthlete
     Friend WithEvents btnSearch As System.Windows.Forms.Button
     Friend WithEvents txtMemNo As System.Windows.Forms.TextBox
     Friend WithEvents btnNew As System.Windows.Forms.Button
+    Friend WithEvents btnDelete As System.Windows.Forms.Button
 End Class

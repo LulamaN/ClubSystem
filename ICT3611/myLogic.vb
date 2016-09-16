@@ -796,6 +796,12 @@
             Return True
         End If
 
+        Dim myTestName As Double
+        If Double.TryParse(myRRF.txtNameSurname.Text, myTestName) Then
+            MessageBox.Show("Please enter a valid name/surname")
+            Return True
+        End If
+
         If myRRF.rdFemale.Checked Or myRRF.rdMale.Checked Then
             'Then ok
         Else
@@ -818,6 +824,11 @@
         End If
 
 
+        If DateDiff(DateInterval.Year, myRRF.dtPickerBirthDate.Value, myRRF.dtPickerDateJoined.Value) < 16 Then
+            MessageBox.Show("Athlete must be 16 or older")
+            Return True
+        End If
+        Return False
     End Function
 
 
@@ -874,6 +885,34 @@
         myFrmEvents.txtRegFee.Text = ""
         myFrmEvents.txtLocation.Text = ""
         myFrmEvents.txtDistance.Text = ""
+    End Sub
+
+
+    Public Shared Function getAthleteRecordsCount(ByVal membNo As String) As Integer
+        Dim mySQL As String
+        Dim myCount As Integer
+        Dim myDT As New DataTable
+
+        mySQL = "SELECT count(membership_number) as recCount from raceresults WHERE membership_number = '" & membNo & "'"
+
+        myDT = fileIO.selectDBData(mySQL)
+
+        myCount = CInt(myDT.Rows(0).Item(0))
+
+
+        Return myCount
+
+
+    End Function
+
+    Public Shared Sub deleteAthlete(ByVal membNo As String)
+        Dim mySQL As String
+
+        mySQL = "DELETE FROM Athlete WHERE membership_number = '" & membNo & "'"
+
+        fileIO.modifyDBData(mySQL)
+
+
     End Sub
 
 

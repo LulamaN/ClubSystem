@@ -150,6 +150,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Athlete.txt" />
+    <Content Include="clubsystem.mdb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Events.txt" />
     <Content Include="RaceResults.txt" />
   </ItemGroup>
